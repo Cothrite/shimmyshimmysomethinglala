@@ -115,7 +115,6 @@
     let puzzleOneSolved = false;
     let puzzleTwoSolved = false;
 
-    // Puzzle 2 HTML markup stored in JS memory (not visible in the initial DOM tree)
     const puzzleTwoHTML = `
         <div id="part-two" class="fade-in">
             <div class="caption">
@@ -147,7 +146,6 @@
         });
     }
 
-    // Hashes input text with SHA-256 so plaintext answers don't appear in source code
     async function hashText(text) {
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
@@ -163,7 +161,6 @@
         const message = document.getElementById("message");
         const hashedInput = await hashText(answer);
 
-        // SHA-256 hash for "martyr"
         const hashOne = "a1c0d45672d348a7b9dd4b9fa372f5cb3c8800b4624d7d13e9a4f4e7c0500e2b";
 
         if (hashedInput === hashOne) {
@@ -178,10 +175,7 @@
                 partOne.classList.add("fade-out");
 
                 setTimeout(function() {
-                    // Remove puzzle 1 completely from the DOM
                     partOne.remove();
-
-                    // Inject puzzle 2 HTML into the page
                     const app = document.getElementById("app");
                     app.innerHTML = puzzleTwoHTML;
                 }, 1500);
@@ -198,7 +192,6 @@
         const message = document.getElementById("message-two");
         const hashedInput = await hashText(answer);
 
-        // SHA-256 hash for "zuntata"
         const hashTwo = "29b86ee9db5642a4a7cf52ce032a188f6197fa14aa3508d4bb00ea4326f63be3";
 
         if (hashedInput === hashTwo) {
