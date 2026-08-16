@@ -14,10 +14,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
         }
 
-        #app {
+        .container {
+            text-align: center;
             width: 90%;
             max-width: 700px;
         }
@@ -28,7 +28,8 @@
             margin-bottom: 20px;
         }
 
-        img {
+        .engarde,
+        .whaddupnerd {
             max-width: 100%;
             height: auto;
             display: block;
@@ -48,6 +49,10 @@
             outline: none;
         }
 
+        .answer-box:focus {
+            border-color: #aaa;
+        }
+
         button {
             margin-top: 10px;
             background-color: black;
@@ -64,33 +69,29 @@
             color: black;
         }
 
-        #message, #message-two {
+        #message,
+        #message-two {
             margin-top: 15px;
+        }
+
+        #part-one {
+            opacity: 1;
+        }
+
+        #part-two {
+            display: none;
+            opacity: 0;
         }
 
         .binary {
             word-break: break-word;
             line-height: 1.6;
         }
-
-        .fade-out {
-            transition: opacity 1.5s ease;
-            opacity: 0;
-        }
-
-        .fade-in {
-            animation: fadeIn 1.5s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
     </style>
 </head>
 <body>
 
-<div id="app">
+<div class="container">
     <div id="part-one">
         <div class="caption">
             hey whats up NERD welcome to my AWESOME PUZZLE!!!<br>
@@ -98,10 +99,32 @@
             i just rushed this really quick cause im a chud<br>
             if you need a hint just like. dm me. ok? ok
         </div>
-        <img src="engarde.png" alt="engarde">
+        <img src="engarde.png" alt="engarde" class="engarde">
         <input type="text" id="answer" class="answer-box" placeholder="enter your answer..."><br>
         <button id="submit-one" onclick="checkAnswer()">SUBMIT</button>
         <div id="message"></div>
+    </div>
+
+    <div id="part-two">
+        <div class="caption">
+            wow maybe youre not an idiot okay oh shit uh take THIS<br><br>
+            <span class="binary">
+                01000001 00111000 00100000 01000011 00110111
+                00100000 01000011 00110110 00100000 01000100
+                00110111 00100000 01000001 00110001 00100000
+                01000111 00110001 00100000 01000101 00110010
+                00100000 01000011 00110001 00100000 01000111
+                00110010 00100000 01000100 00110113 00100000
+                01000100 00110101
+            </span>
+        </div>
+        <img src="whaddupnerd.png" alt="whaddup nerd" class="whaddupnerd">
+        <div class="caption">
+            your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd
+        </div>
+        <input type="text" id="answer-two" class="answer-box" placeholder="enter your answer..."><br>
+        <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
+        <div id="message-two"></div>
     </div>
 </div>
 
@@ -109,86 +132,62 @@
     let puzzleOneSolved = false;
     let puzzleTwoSolved = false;
 
-    const puzzleTwoHTML = `
-        <div id="part-two" class="fade-in">
-            <div class="caption">
-                wow maybe youre not an idiot okay oh shit uh take THIS<br><br>
-                <span class="binary">
-                    01000001 00111000 00100000 01000011 00110111
-                    00100000 01000011 00110110 00100000 01000100
-                    00110111 00100000 01000001 00110001 00100000
-                    01000111 00110001 00100000 01000101 00110010
-                    00100000 01000011 00110001 00100000 01000111
-                    00110010 00100000 01000100 00110011 00100000
-                    01000100 00110101
-                </span>
-            </div>
-            <img src="whaddupnerd.png" alt="whaddup nerd">
-            <div class="caption">your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd</div>
-            <input type="text" id="answer-two" class="answer-box" placeholder="enter your answer..."><br>
-            <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
-            <div id="message-two"></div>
-        </div>
-    `;
-
     function playYippee() {
         const audio = new Audio("yippee.mp3");
-        audio.play().catch(err => console.log("Audio playback error:", err));
+        audio.play().catch(function(error) {
+            console.log("Audio playback error:", error);
+        });
     }
 
-    async function hashText(text) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(text);
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        return Array.from(new Uint8Array(hashBuffer))
-            .map(b => b.toString(16).padStart(2, "0"))
-            .join("");
-    }
-
-    async function checkAnswer() {
+    function checkAnswer() {
         if (puzzleOneSolved) return;
 
-        const input = document.getElementById("answer").value.trim().toLowerCase();
-        const hashedInput = await hashText(input);
+        const answer = document.getElementById("answer").value.trim().toLowerCase();
+        const message = document.getElementById("message");
 
-        const targetHash = "a1c0d45672d348a7b9dd4b9fa372f5cb3c8800b4624d7d13e9a4f4e7c0500e2b";
-
-        if (hashedInput === targetHash) {
+        if (answer === "martyr") {
             puzzleOneSolved = true;
             document.getElementById("submit-one").disabled = true;
+
             playYippee();
-            document.getElementById("message").textContent = "CORRECT!!!";
+            message.textContent = "CORRECT!!!";
 
-            setTimeout(() => {
+            setTimeout(function() {
                 const partOne = document.getElementById("part-one");
-                partOne.classList.add("fade-out");
+                const partTwo = document.getElementById("part-two");
 
-                setTimeout(() => {
-                    partOne.remove();
-                    const app = document.getElementById("app");
-                    app.innerHTML = puzzleTwoHTML;
+                partOne.style.transition = "opacity 1.5s ease";
+                partOne.style.opacity = "0";
+
+                setTimeout(function() {
+                    partOne.style.display = "none";
+                    partTwo.style.display = "block";
+                    partTwo.style.opacity = "0";
+
+                    setTimeout(function() {
+                        partTwo.style.transition = "opacity 1.5s ease";
+                        partTwo.style.opacity = "1";
+                    }, 50);
                 }, 1500);
             }, 1000);
         } else {
-            document.getElementById("message").textContent = "WRONG. try again.";
+            message.textContent = "WRONG. try again.";
         }
     }
 
-    async function checkSecondAnswer() {
+    function checkSecondAnswer() {
         if (puzzleTwoSolved) return;
 
-        const input = document.getElementById("answer-two").value.trim().toLowerCase();
-        const hashedInput = await hashText(input);
+        const answer = document.getElementById("answer-two").value.trim().toLowerCase();
+        const message = document.getElementById("message-two");
 
-        const targetHash = "29b86ee9db5642a4a7cf52ce032a188f6197fa14aa3508d4bb00ea4326f63be3";
-
-        if (hashedInput === targetHash) {
+        if (answer === "zuntata") {
             puzzleTwoSolved = true;
             playYippee();
-            document.getElementById("message-two").textContent = "WOW YOU DID IT OK ???????";
+            message.textContent = "WOW YOU DID IT OK ???????";
             document.getElementById("submit-two").disabled = true;
         } else {
-            document.getElementById("message-two").textContent = "WRONG. try again.";
+            message.textContent = "WRONG. try again.";
         }
     }
 </script>
