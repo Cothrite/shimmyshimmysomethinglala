@@ -134,7 +134,7 @@
 
         <br>
 
-        <button onclick="checkAnswer()">SUBMIT</button>
+        <button id="submit-one" onclick="checkAnswer()">SUBMIT</button>
 
         <div id="message"></div>
 
@@ -178,7 +178,7 @@
 
         <br>
 
-        <button onclick="checkSecondAnswer()">SUBMIT</button>
+        <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
 
         <div id="message-two"></div>
 
@@ -190,6 +190,7 @@
 <script>
 
     let yippeePlayed = false;
+    let puzzleOneSolved = false;
 
     function playYippee() {
         if (!yippeePlayed) {
@@ -203,6 +204,7 @@
     }
 
     function checkAnswer() {
+        if (puzzleOneSolved) return;
 
         const answer =
             document.getElementById("answer").value.trim().toLowerCase();
@@ -214,6 +216,9 @@
          * FIRST PUZZLE ANSWER
          */
         if (answer === "martyr") {
+
+            puzzleOneSolved = true;
+            document.getElementById("submit-one").disabled = true;
 
             playYippee();
             message.textContent = "CORRECT!!!";
@@ -291,6 +296,7 @@
             playYippee();
             message.textContent =
                 "WOW YOU DID IT OK ???????";
+            document.getElementById("submit-two").disabled = true;
 
         } else {
 
