@@ -31,7 +31,6 @@
             margin-bottom: 20px;
         }
 
-        .engarde,
         .whaddupnerd {
             max-width: 100%;
             height: auto;
@@ -80,18 +79,8 @@
             color: black;
         }
 
-        #message,
         #message-two {
             margin-top: 15px;
-        }
-
-        #part-one {
-            opacity: 1;
-        }
-
-        #part-two {
-            display: none;
-            opacity: 0;
         }
 
         .binary {
@@ -103,45 +92,9 @@
 
 <body>
 
-<!-- AUDIO ELEMENTS -->
-<audio id="yippee-sound" src="yippee.mp3"></audio>
-
 <div class="container">
 
-    <!-- FIRST PUZZLE -->
-
-    <div id="part-one">
-
-        <div class="caption">
-            hey whats up NERD welcome to my AWESOME PUZZLE!!!<br>
-            if youre reading this then youre probably shu hi<br>
-            i just rushed this really quick cause im a chud<br>
-            if you need a hint just like. dm me. ok? ok
-        </div>
-
-        <img
-            src="engarde.png"
-            alt="engarde"
-            class="engarde"
-        >
-
-        <input
-            type="text"
-            id="answer"
-            class="answer-box"
-            placeholder="enter your answer..."
-        >
-
-        <br>
-
-        <button id="submit-one" onclick="checkAnswer()">SUBMIT</button>
-
-        <div id="message"></div>
-
-    </div>
-
-
-    <!-- SECOND PUZZLE -->
+    <!-- PUZZLE -->
 
     <div id="part-two">
 
@@ -189,92 +142,7 @@
 
 <script>
 
-    let puzzleOneSolved = false;
     let puzzleTwoSolved = false;
-
-    function playYippee() {
-        const yippee = document.getElementById("yippee-sound");
-        yippee.currentTime = 0;
-        yippee.play().catch(function(error) {
-            console.log("Error playing yippee:", error);
-        });
-    }
-
-    function checkAnswer() {
-        if (puzzleOneSolved) return;
-
-        const answer =
-            document.getElementById("answer").value.trim().toLowerCase();
-
-        const message =
-            document.getElementById("message");
-
-        /*
-         * FIRST PUZZLE ANSWER
-         */
-        if (answer === "martyr") {
-
-            puzzleOneSolved = true;
-            document.getElementById("submit-one").disabled = true;
-
-            playYippee();
-            message.textContent = "CORRECT!!!";
-
-            setTimeout(function() {
-
-                const partOne =
-                    document.getElementById("part-one");
-
-                const partTwo =
-                    document.getElementById("part-two");
-
-                /*
-                 * Fade out puzzle 1.
-                 */
-                partOne.style.transition =
-                    "opacity 1.5s ease";
-
-                partOne.style.opacity = "0";
-
-
-                /*
-                 * Wait for the fade to finish.
-                 */
-                setTimeout(function() {
-
-                    partOne.style.display = "none";
-
-                    /*
-                     * Show puzzle 2.
-                     */
-                    partTwo.style.display = "block";
-
-                    partTwo.style.opacity = "0";
-
-                    /*
-                     * Fade puzzle 2 in.
-                     */
-                    setTimeout(function() {
-
-                        partTwo.style.transition =
-                            "opacity 1.5s ease";
-
-                        partTwo.style.opacity = "1";
-
-                    }, 50);
-
-                }, 1500);
-
-            }, 1000);
-
-        } else {
-
-            message.textContent =
-                "WRONG. try again.";
-
-        }
-    }
-
 
     function checkSecondAnswer() {
         if (puzzleTwoSolved) return;
@@ -287,12 +155,11 @@
 
 
         /*
-         * SECOND PUZZLE ANSWER
+         * PUZZLE ANSWER
          */
         if (answer === "zuntata") {
 
             puzzleTwoSolved = true;
-            playYippee();
             message.textContent =
                 "WOW YOU DID IT OK ???????";
             document.getElementById("submit-two").disabled = true;
