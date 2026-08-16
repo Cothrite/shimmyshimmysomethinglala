@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>HIIII</title>
-
     <style>
         body {
             background-color: black;
@@ -13,16 +11,10 @@
             font-family: monospace;
             margin: 0;
             min-height: 100vh;
-
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        .container {
             text-align: center;
-            width: 90%;
-            max-width: 700px;
         }
 
         .caption {
@@ -31,8 +23,7 @@
             margin-bottom: 20px;
         }
 
-        .engarde,
-        .whaddupnerd {
+        img {
             max-width: 100%;
             height: auto;
             display: block;
@@ -43,35 +34,23 @@
             width: 80%;
             max-width: 500px;
             box-sizing: border-box;
-
             background-color: black;
             color: white;
-
             border: 1px solid white;
             padding: 10px;
-
             font-family: monospace;
             font-size: 16px;
-
             outline: none;
-        }
-
-        .answer-box:focus {
-            border-color: #aaa;
         }
 
         button {
             margin-top: 10px;
-
             background-color: black;
             color: white;
-
             border: 1px solid white;
             padding: 10px 20px;
-
             font-family: monospace;
             font-size: 16px;
-
             cursor: pointer;
         }
 
@@ -80,13 +59,8 @@
             color: black;
         }
 
-        #message,
-        #message-two {
+        #message, #message-two {
             margin-top: 15px;
-        }
-
-        #part-one {
-            opacity: 1;
         }
 
         #part-two {
@@ -100,54 +74,27 @@
         }
     </style>
 </head>
-
 <body>
 
-<!-- AUDIO ELEMENT -->
 <audio id="yippee-sound" src="yippee.mp3" preload="auto"></audio>
 
-<div class="container">
-
-    <!-- FIRST PUZZLE -->
-
+<div>
     <div id="part-one">
-
         <div class="caption">
             hey whats up NERD welcome to my AWESOME PUZZLE!!!<br>
             if youre reading this then youre probably shu hi<br>
             i just rushed this really quick cause im a chud<br>
             if you need a hint just like. dm me. ok? ok
         </div>
-
-        <img
-            src="engarde.png"
-            alt="engarde"
-            class="engarde"
-        >
-
-        <input
-            type="text"
-            id="answer"
-            class="answer-box"
-            placeholder="enter your answer..."
-        >
-
-        <br>
-
+        <img src="engarde.png" alt="engarde">
+        <input type="text" id="answer" class="answer-box" placeholder="enter your answer..."><br>
         <button id="submit-one" onclick="checkAnswer()">SUBMIT</button>
-
         <div id="message"></div>
-
     </div>
 
-
-    <!-- SECOND PUZZLE -->
-
     <div id="part-two">
-
         <div class="caption">
             wow maybe youre not an idiot okay oh shit uh take THIS<br><br>
-
             <span class="binary">
                 01000001 00111000 00100000 01000011 00110111
                 00100000 01000011 00110110 00100000 01000100
@@ -158,160 +105,64 @@
                 01000100 00110101
             </span>
         </div>
-
-        <img
-            src="whaddupnerd.png"
-            alt="whaddup nerd"
-            class="whaddupnerd"
-        >
-
-        <div class="caption">
-            your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd
-        </div>
-
-        <input
-            type="text"
-            id="answer-two"
-            class="answer-box"
-            placeholder="enter your answer..."
-        >
-
-        <br>
-
+        <img src="whaddupnerd.png" alt="whaddup nerd">
+        <div class="caption">your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd</div>
+        <input type="text" id="answer-two" class="answer-box" placeholder="enter your answer..."><br>
         <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
-
         <div id="message-two"></div>
-
     </div>
-
 </div>
 
-
 <script>
-
-    let puzzleOneSolved = false;
-    let puzzleTwoSolved = false;
+    let puzzleOneSolved = false, puzzleTwoSolved = false;
 
     function playYippee() {
         const yippee = document.getElementById("yippee-sound");
-        
         if (yippee) {
             yippee.currentTime = 0;
-            yippee.play().catch(function(error) {
-                console.log("Audio play failed, retrying with dynamic audio object:", error);
-                // Fallback attempt
-                const dynamicAudio = new Audio("yippee.mp3");
-                dynamicAudio.play().catch(e => console.log("Fallback failed:", e));
-            });
+            yippee.play().catch(() => new Audio("yippee.mp3").play().catch(() => {}));
         }
     }
 
     function checkAnswer() {
         if (puzzleOneSolved) return;
-
-        const answer =
-            document.getElementById("answer").value.trim().toLowerCase();
-
-        const message =
-            document.getElementById("message");
-
-        /*
-         * FIRST PUZZLE ANSWER
-         */
-        if (answer === "martyr") {
-
+        if (document.getElementById("answer").value.trim().toLowerCase() === "martyr") {
             puzzleOneSolved = true;
             document.getElementById("submit-one").disabled = true;
-
             playYippee();
-            message.textContent = "CORRECT!!!";
+            document.getElementById("message").textContent = "CORRECT!!!";
 
-            setTimeout(function() {
+            setTimeout(() => {
+                const p1 = document.getElementById("part-one");
+                const p2 = document.getElementById("part-two");
+                p1.style.transition = "opacity 1.5s ease";
+                p1.style.opacity = "0";
 
-                const partOne =
-                    document.getElementById("part-one");
-
-                const partTwo =
-                    document.getElementById("part-two");
-
-                /*
-                 * Fade out puzzle 1.
-                 */
-                partOne.style.transition =
-                    "opacity 1.5s ease";
-
-                partOne.style.opacity = "0";
-
-
-                /*
-                 * Wait for the fade to finish.
-                 */
-                setTimeout(function() {
-
-                    partOne.style.display = "none";
-
-                    /*
-                     * Show puzzle 2.
-                     */
-                    partTwo.style.display = "block";
-
-                    partTwo.style.opacity = "0";
-
-                    /*
-                     * Fade puzzle 2 in.
-                     */
-                    setTimeout(function() {
-
-                        partTwo.style.transition =
-                            "opacity 1.5s ease";
-
-                        partTwo.style.opacity = "1";
-
+                setTimeout(() => {
+                    p1.style.display = "none";
+                    p2.style.display = "block";
+                    setTimeout(() => {
+                        p2.style.transition = "opacity 1.5s ease";
+                        p2.style.opacity = "1";
                     }, 50);
-
                 }, 1500);
-
             }, 1000);
-
         } else {
-
-            message.textContent =
-                "WRONG. try again.";
-
+            document.getElementById("message").textContent = "WRONG. try again.";
         }
     }
-
 
     function checkSecondAnswer() {
         if (puzzleTwoSolved) return;
-
-        const answer =
-            document.getElementById("answer-two").value.trim().toLowerCase();
-
-        const message =
-            document.getElementById("message-two");
-
-
-        /*
-         * SECOND PUZZLE ANSWER
-         */
-        if (answer === "zuntata") {
-
+        if (document.getElementById("answer-two").value.trim().toLowerCase() === "zuntata") {
             puzzleTwoSolved = true;
             playYippee();
-            message.textContent =
-                "WOW YOU DID IT OK ???????";
+            document.getElementById("message-two").textContent = "WOW YOU DID IT OK ???????";
             document.getElementById("submit-two").disabled = true;
-
         } else {
-
-            message.textContent =
-                "WRONG. try again.";
-
+            document.getElementById("message-two").textContent = "WRONG. try again.";
         }
     }
-
 </script>
-
 </body>
 </html>
