@@ -17,6 +17,11 @@
             text-align: center;
         }
 
+        #app {
+            width: 90%;
+            max-width: 700px;
+        }
+
         .caption {
             font-size: 16px;
             line-height: 1.5;
@@ -63,22 +68,30 @@
             margin-top: 15px;
         }
 
-        #part-two {
-            display: none;
-            opacity: 0;
-        }
-
         .binary {
             word-break: break-word;
             line-height: 1.6;
+        }
+
+        .fade-out {
+            transition: opacity 1.5s ease;
+            opacity: 0;
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-<audio id="yippee-sound" src="yippee.mp3" preload="auto"></audio>
-
-<div>
+<div id="app">
+    <!-- ONLY PUZZLE 1 IS PRESENT ON LOAD -->
     <div id="part-one">
         <div class="caption">
             hey whats up NERD welcome to my AWESOME PUZZLE!!!<br>
@@ -91,60 +104,77 @@
         <button id="submit-one" onclick="checkAnswer()">SUBMIT</button>
         <div id="message"></div>
     </div>
-
-    <div id="part-two">
-        <div class="caption">
-            wow maybe youre not an idiot okay oh shit uh take THIS<br><br>
-            <span class="binary">
-                01000001 00111000 00100000 01000011 00110111
-                00100000 01000011 00110110 00100000 01000100
-                00110111 00100000 01000001 00110001 00100000
-                01000111 00110001 00100000 01000101 00110010
-                00100000 01000011 00110001 00100000 01000111
-                00110010 00100000 01000100 00110011 00100000
-                01000100 00110101
-            </span>
-        </div>
-        <img src="whaddupnerd.png" alt="whaddup nerd">
-        <div class="caption">your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd</div>
-        <input type="text" id="answer-two" class="answer-box" placeholder="enter your answer..."><br>
-        <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
-        <div id="message-two"></div>
-    </div>
 </div>
 
 <script>
-    let puzzleOneSolved = false, puzzleTwoSolved = false;
+    let puzzleOneSolved = false;
+    let puzzleTwoSolved = false;
 
+    // Puzzle 2 markup stored in JS memory - not in DOM initially
+    const puzzleTwoHTML = `
+        <div id="part-two" class="fade-in">
+            <div class="caption">
+                wow maybe youre not an idiot okay oh shit uh take THIS<br><br>
+                <span class="binary">
+                    01000001 00111000 00100000 01000011 00110111
+                    00100000 01000011 00110110 00100000 01000100
+                    00110111 00100000 01000001 00110001 00100000
+                    01000111 00110001 00100000 01000101 00110010
+                    00100000 01000011 00110001 00100000 01000111
+                    00110010 00100000 01000100 00110011 00100000
+                    01000100 00110101
+                </span>
+            </div>
+            <img src="whaddupnerd.png" alt="whaddup nerd">
+            <div class="caption">your job is to find a NAME a PERSON an ARTIST ok ok? ok bye nerd</div>
+            <input type="text" id="answer-two" class="answer-box" placeholder="enter your answer..."><br>
+            <button id="submit-two" onclick="checkSecondAnswer()">SUBMIT</button>
+            <div id="message-two"></div>
+        </div>
+    `;
+
+    // Audio instantiated dynamically in memory (no audio tag in DOM)
     function playYippee() {
-        const yippee = document.getElementById("yippee-sound");
-        if (yippee) {
-            yippee.currentTime = 0;
-            yippee.play().catch(() => new Audio("yippee.mp3").play().catch(() => {}));
-        }
+        const audio = new Audio("yippee.mp3");
+        audio.play().catch(err => console.log("Audio playback error:", err));
     }
 
-    function checkAnswer() {
+    // SHA-256 helper function to avoid exposing plaintext answers in DevTools
+    async function hashText(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(hashBuffer))
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("");
+    }
+
+    async function checkAnswer() {
         if (puzzleOneSolved) return;
-        if (document.getElementById("answer").value.trim().toLowerCase() === "martyr") {
+
+        const input = document.getElementById("answer").value.trim().toLowerCase();
+        const hashedInput = await hashText(input);
+
+        // SHA-256 hash for "martyr"
+        const targetHash = "a310bb2692ff8310f545fa63519d0840523ec33235ffb0f19c9616781ebca4eb";
+
+        if (hashedInput === targetHash) {
             puzzleOneSolved = true;
             document.getElementById("submit-one").disabled = true;
             playYippee();
             document.getElementById("message").textContent = "CORRECT!!!";
 
             setTimeout(() => {
-                const p1 = document.getElementById("part-one");
-                const p2 = document.getElementById("part-two");
-                p1.style.transition = "opacity 1.5s ease";
-                p1.style.opacity = "0";
+                const partOne = document.getElementById("part-one");
+                partOne.classList.add("fade-out");
 
                 setTimeout(() => {
-                    p1.style.display = "none";
-                    p2.style.display = "block";
-                    setTimeout(() => {
-                        p2.style.transition = "opacity 1.5s ease";
-                        p2.style.opacity = "1";
-                    }, 50);
+                    // Completely remove Puzzle 1 from the DOM
+                    partOne.remove();
+
+                    // Inject Puzzle 2 into the DOM
+                    const app = document.getElementById("app");
+                    app.innerHTML = puzzleTwoHTML;
                 }, 1500);
             }, 1000);
         } else {
@@ -152,9 +182,16 @@
         }
     }
 
-    function checkSecondAnswer() {
+    async function checkSecondAnswer() {
         if (puzzleTwoSolved) return;
-        if (document.getElementById("answer-two").value.trim().toLowerCase() === "zuntata") {
+
+        const input = document.getElementById("answer-two").value.trim().toLowerCase();
+        const hashedInput = await hashText(input);
+
+        // SHA-256 hash for "zuntata"
+        const targetHash = "29b86ee9db5642a4a7cf52ce032a188f6197fa14aa3508d4bb00ea4326f63be3";
+
+        if (hashedInput === targetHash) {
             puzzleTwoSolved = true;
             playYippee();
             document.getElementById("message-two").textContent = "WOW YOU DID IT OK ???????";
