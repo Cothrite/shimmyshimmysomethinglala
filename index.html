@@ -103,6 +103,9 @@
 
 <body>
 
+<!-- AUDIO ELEMENT -->
+<audio id="yippee-sound" src="yippee.mp3" preload="auto"></audio>
+
 <div class="container">
 
     <!-- FIRST PUZZLE -->
@@ -189,6 +192,20 @@
     let puzzleOneSolved = false;
     let puzzleTwoSolved = false;
 
+    function playYippee() {
+        const yippee = document.getElementById("yippee-sound");
+        
+        if (yippee) {
+            yippee.currentTime = 0;
+            yippee.play().catch(function(error) {
+                console.log("Audio play failed, retrying with dynamic audio object:", error);
+                // Fallback attempt
+                const dynamicAudio = new Audio("yippee.mp3");
+                dynamicAudio.play().catch(e => console.log("Fallback failed:", e));
+            });
+        }
+    }
+
     function checkAnswer() {
         if (puzzleOneSolved) return;
 
@@ -206,6 +223,7 @@
             puzzleOneSolved = true;
             document.getElementById("submit-one").disabled = true;
 
+            playYippee();
             message.textContent = "CORRECT!!!";
 
             setTimeout(function() {
@@ -280,6 +298,7 @@
         if (answer === "zuntata") {
 
             puzzleTwoSolved = true;
+            playYippee();
             message.textContent =
                 "WOW YOU DID IT OK ???????";
             document.getElementById("submit-two").disabled = true;
