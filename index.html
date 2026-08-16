@@ -91,7 +91,6 @@
 <body>
 
 <div id="app">
-    <!-- ONLY PUZZLE 1 IS PRESENT ON LOAD -->
     <div id="part-one">
         <div class="caption">
             hey whats up NERD welcome to my AWESOME PUZZLE!!!<br>
@@ -110,7 +109,6 @@
     let puzzleOneSolved = false;
     let puzzleTwoSolved = false;
 
-    // Puzzle 2 markup stored in JS memory - not in DOM initially
     const puzzleTwoHTML = `
         <div id="part-two" class="fade-in">
             <div class="caption">
@@ -133,13 +131,11 @@
         </div>
     `;
 
-    // Audio instantiated dynamically in memory (no audio tag in DOM)
     function playYippee() {
         const audio = new Audio("yippee.mp3");
         audio.play().catch(err => console.log("Audio playback error:", err));
     }
 
-    // SHA-256 helper function to avoid exposing plaintext answers in DevTools
     async function hashText(text) {
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
@@ -155,8 +151,7 @@
         const input = document.getElementById("answer").value.trim().toLowerCase();
         const hashedInput = await hashText(input);
 
-        // SHA-256 hash for "martyr"
-        const targetHash = "a310bb2692ff8310f545fa63519d0840523ec33235ffb0f19c9616781ebca4eb";
+        const targetHash = "a1c0d45672d348a7b9dd4b9fa372f5cb3c8800b4624d7d13e9a4f4e7c0500e2b";
 
         if (hashedInput === targetHash) {
             puzzleOneSolved = true;
@@ -169,10 +164,7 @@
                 partOne.classList.add("fade-out");
 
                 setTimeout(() => {
-                    // Completely remove Puzzle 1 from the DOM
                     partOne.remove();
-
-                    // Inject Puzzle 2 into the DOM
                     const app = document.getElementById("app");
                     app.innerHTML = puzzleTwoHTML;
                 }, 1500);
@@ -188,7 +180,6 @@
         const input = document.getElementById("answer-two").value.trim().toLowerCase();
         const hashedInput = await hashText(input);
 
-        // SHA-256 hash for "zuntata"
         const targetHash = "29b86ee9db5642a4a7cf52ce032a188f6197fa14aa3508d4bb00ea4326f63be3";
 
         if (hashedInput === targetHash) {
