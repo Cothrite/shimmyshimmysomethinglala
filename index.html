@@ -103,8 +103,8 @@
 
 <body>
 
-<!-- BACKGROUND AUDIO -->
-<audio id="bg-music" src="music.mp3" loop autoplay></audio>
+<!-- AUDIO ELEMENTS -->
+<audio id="yippee-sound" src="yippee.mp3"></audio>
 
 <div class="container">
 
@@ -189,17 +189,15 @@
 
 <script>
 
-    function playAudio() {
-        const audio = document.getElementById("bg-music");
-        if (audio.paused) {
-            audio.play().catch(function(error) {
-                console.log("Autoplay prevented by browser:", error);
-            });
-        }
+    function playYippee() {
+        const yippee = document.getElementById("yippee-sound");
+        yippee.currentTime = 0;
+        yippee.play().catch(function(error) {
+            console.log("Error playing yippee:", error);
+        });
     }
 
     function checkAnswer() {
-        playAudio();
 
         const answer =
             document.getElementById("answer").value.trim().toLowerCase();
@@ -212,6 +210,7 @@
          */
         if (answer === "martyr") {
 
+            playYippee();
             message.textContent = "CORRECT!!!";
 
             setTimeout(function() {
@@ -271,7 +270,6 @@
 
 
     function checkSecondAnswer() {
-        playAudio();
 
         const answer =
             document.getElementById("answer-two").value.trim().toLowerCase();
@@ -285,6 +283,7 @@
          */
         if (answer === "zuntata") {
 
+            playYippee();
             message.textContent =
                 "WOW YOU DID IT OK ???????";
 
@@ -295,9 +294,6 @@
 
         }
     }
-
-    // Try playing audio on any page click to satisfy browser requirements
-    document.addEventListener("click", playAudio, { once: true });
 
 </script>
 
