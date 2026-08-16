@@ -189,12 +189,17 @@
 
 <script>
 
+    let yippeePlayed = false;
+
     function playYippee() {
-        const yippee = document.getElementById("yippee-sound");
-        yippee.currentTime = 0;
-        yippee.play().catch(function(error) {
-            console.log("Error playing yippee:", error);
-        });
+        if (!yippeePlayed) {
+            yippeePlayed = true;
+            const yippee = document.getElementById("yippee-sound");
+            yippee.currentTime = 0;
+            yippee.play().catch(function(error) {
+                console.log("Error playing yippee:", error);
+            });
+        }
     }
 
     function checkAnswer() {
