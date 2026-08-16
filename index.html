@@ -189,18 +189,15 @@
 
 <script>
 
-    let yippeePlayed = false;
     let puzzleOneSolved = false;
+    let puzzleTwoSolved = false;
 
     function playYippee() {
-        if (!yippeePlayed) {
-            yippeePlayed = true;
-            const yippee = document.getElementById("yippee-sound");
-            yippee.currentTime = 0;
-            yippee.play().catch(function(error) {
-                console.log("Error playing yippee:", error);
-            });
-        }
+        const yippee = document.getElementById("yippee-sound");
+        yippee.currentTime = 0;
+        yippee.play().catch(function(error) {
+            console.log("Error playing yippee:", error);
+        });
     }
 
     function checkAnswer() {
@@ -280,6 +277,7 @@
 
 
     function checkSecondAnswer() {
+        if (puzzleTwoSolved) return;
 
         const answer =
             document.getElementById("answer-two").value.trim().toLowerCase();
@@ -293,6 +291,7 @@
          */
         if (answer === "zuntata") {
 
+            puzzleTwoSolved = true;
             playYippee();
             message.textContent =
                 "WOW YOU DID IT OK ???????";
