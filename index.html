@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,6 +106,13 @@
 
 <div class="container">
 
+    <!-- AUDIO -->
+
+    <audio id="background-music" src="music.mp3" loop></audio>
+
+    <audio id="yippee-sound" src="yippee.mp3"></audio>
+
+
     <!-- FIRST PUZZLE -->
 
     <div id="part-one">
@@ -194,12 +202,39 @@
         const message =
             document.getElementById("message");
 
+        const music =
+            document.getElementById("background-music");
+
+        if (music.paused) {
+            music.volume = 0.5;
+            music.play().catch(function(error) {
+                console.log("Music could not play:", error);
+            });
+        }
+
+
         /*
          * FIRST PUZZLE ANSWER
          */
+
         if (answer === "martyr") {
 
             message.textContent = "CORRECT!!!";
+
+
+            /*
+             * PLAY YIPPEE SOUND
+             */
+
+            const yippee =
+                document.getElementById("yippee-sound");
+
+            yippee.currentTime = 0;
+
+            yippee.play().catch(function(error) {
+                console.log("Yippee sound could not play:", error);
+            });
+
 
             setTimeout(function() {
 
@@ -209,9 +244,11 @@
                 const partTwo =
                     document.getElementById("part-two");
 
+
                 /*
                  * Fade out puzzle 1.
                  */
+
                 partOne.style.transition =
                     "opacity 1.5s ease";
 
@@ -221,20 +258,20 @@
                 /*
                  * Wait for the fade to finish.
                  */
+
                 setTimeout(function() {
 
                     partOne.style.display = "none";
 
-                    /*
-                     * Show puzzle 2.
-                     */
                     partTwo.style.display = "block";
 
                     partTwo.style.opacity = "0";
 
+
                     /*
                      * Fade puzzle 2 in.
                      */
+
                     setTimeout(function() {
 
                         partTwo.style.transition =
@@ -257,6 +294,7 @@
     }
 
 
+
     function checkSecondAnswer() {
 
         const answer =
@@ -269,10 +307,25 @@
         /*
          * SECOND PUZZLE ANSWER
          */
+
         if (answer === "zuntata") {
 
             message.textContent =
                 "WOW YOU DID IT OK ???????";
+
+
+            /*
+             * PLAY YIPPEE SOUND
+             */
+
+            const yippee =
+                document.getElementById("yippee-sound");
+
+            yippee.currentTime = 0;
+
+            yippee.play().catch(function(error) {
+                console.log("Yippee sound could not play:", error);
+            });
 
         } else {
 
@@ -286,3 +339,4 @@
 
 </body>
 </html>
+```
